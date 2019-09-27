@@ -1,0 +1,20 @@
+syntax = "proto3";
+package main;
+message P2PMessage {
+  repeated bytes Data= 1;
+}
+ message BusMessage {
+    string command = 1;
+    repeated bytes Parameters = 2;
+  }
+
+  // to parse Listeners parameter from announce module
+  message Addrs {
+    repeated bytes Address =1;
+  }
+  message MockProtoMessage {
+    string Command = 1;
+    bytes Data =2;
+
+  }
+    // protoc --proto_path=$HOME/wks_go/src/testLibp2p/syncPeers/ --go_out=$HOME/wks_go/src/testLibp2p/syncPeers/ p2pMessage.proto
