@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/rand"
+	"flag"
 	"io/ioutil"
 	"os"
 	"path"
@@ -11,9 +12,16 @@ import (
 	"github.com/mr-tron/base58"
 )
 
+var prefixKey string
+var countKey int
+
 func main() {
-	for i := 1; i < 5; i++ {
-		saveGenKey(i, "servant")
+	flag.StringVar(&prefixKey, "prefix", "peer", "node private key path")
+	flag.IntVar(&countKey, "count", 4, "number of key to generate")
+	flag.Parse()
+
+	for i := 1; i <= countKey; i++ {
+		saveGenKey(i, prefixKey)
 	}
 
 }

@@ -8,9 +8,10 @@ import (
 )
 
 func main() {
-	testFromRandomPrvKey()
+	//testFromRandomPrvKey()
 	//testIDFromPrvKey()
 	//testIDFromString(addrs)
+	testInfo(mockValidP2PAddress())
 }
 func mockValidP2PAddress() []string {
 	return []string{
@@ -23,6 +24,7 @@ func mockPrivateKey() []byte {
 	privatekey := []byte("080112406eb84a3845d33c2a389d7fbea425cbf882047a2ab13084562f06875db47b5fdc2e45a298e6cd0472eeb97cd023c723824e157869d81039794864987c05b212a8")
 	return privatekey
 }
+
 func testFromRandomPrvKey() {
 	prvKey, _ := GenRandPrvKey()
 
