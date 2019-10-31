@@ -9,17 +9,30 @@ import (
 
 func main() {
 	//testFromRandomPrvKey()
-	//testIDFromPrvKey()
-	//testIDFromString(addrs)
-	testInfo(mockValidP2PAddress())
+	//	testFromFilePrvKey()
+	//testIDFromString()
+	//testInfo(mockValidP2PAddress())
+	testAddrsInfos()
 }
 func mockValidP2PAddress() []string {
 	return []string{
 		"/ip4/127.0.0.1/tcp/12146/p2p/12D3KooWCvzWT8L6HTtAwac5Vr7RzLitbyZkJ9T9fnikWonnS1DR",
+		"/ip4/118.163.120.180/tcp/12146/p2p/12D3KooWCvzWT8L6HTtAwac5Vr7RzLitbyZkJ9T9fnikWonnS1DR",
+		"/ip4/127.0.0.1/tcp/12140/p2p/12D3KooWKYZYVaRCX5zKXb1sEYvEm1PEjQ3WtBbVtVoCLuBVYVWp",
 		"/ip6/::1/tcp/12146/ipfs/QmR2ykuCBPY27hLUCJDa6KxVForfLUvz6AcCj33y5Hxx7D",
 	}
 }
 
+func stringAddrsToMaAddrs(addrs []string) []ma.Multiaddr {
+	var maAddrs []ma.Multiaddr
+	for _, addr := range addrs {
+		maddr, err := ma.NewMultiaddr(addr)
+		if err == nil {
+			maAddrs = append(maAddrs, maddr)
+		}
+	}
+	return maAddrs
+}
 func mockPrivateKey() []byte {
 	privatekey := []byte("080112406eb84a3845d33c2a389d7fbea425cbf882047a2ab13084562f06875db47b5fdc2e45a298e6cd0472eeb97cd023c723824e157869d81039794864987c05b212a8")
 	return privatekey
@@ -40,6 +53,16 @@ func testFromRandomPrvKey() {
 		return
 	}
 	fmt.Println("id from 58string:", idfrom58.String())
+}
+func testAddrsInfos() {
+	maAddrs := stringAddrsToMaAddrs(mockValidP2PAddress())
+	infos, err := peerlib.AddrInfosFromP2pAddrs(maAddrs...)
+	if err != nil {
+		fmt.Println("testAddrsInfos Error:", err)
+	}
+	for _, info := range infos {
+		fmt.Printf("\x1b[32m%s\x1b[0m\n", info.String())
+	}
 }
 
 func testFromFilePrvKey() {

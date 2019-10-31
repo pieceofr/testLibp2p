@@ -8,12 +8,14 @@ import (
 
 	libp2p "github.com/libp2p/go-libp2p"
 	p2pcore "github.com/libp2p/go-libp2p-core"
+	crypto "github.com/libp2p/go-libp2p-core/crypto"
 	"github.com/libp2p/go-libp2p-core/peer"
-	crypto "github.com/libp2p/go-libp2p-crypto"
-	peerstore "github.com/libp2p/go-libp2p-peerstore"
+	peerstore "github.com/libp2p/go-libp2p-core/peerstore"
 	tls "github.com/libp2p/go-libp2p-tls"
-	"github.com/multiformats/go-multiaddr"
+	multiaddr "github.com/multiformats/go-multiaddr"
 )
+
+var nodeProtocol = multiaddr.ProtocolWithCode(multiaddr.P_P2P).Name
 
 //SimpleNode 0:servant 1:client
 type SimpleNode struct {
@@ -73,7 +75,9 @@ func (n *SimpleNode) Listen() {
 			fmt.Print(err)
 			return
 		}
-		fmt.Printf("Run './Peers -run=  -addr=/ip4/%s/tcp/%v/p2p/%s' on another console.\n", n.PublicIP, n.Port, n.Host.ID().Pretty())
+		for _, a := range n.Host.Addrs() {
+			fmt.Printf("\x1b[32mHost Address: %s/%v/%s\x1b[0m\n", a, nodeProtocol, n.Host.ID())
+		}
 		fmt.Printf("\nWaiting for incoming connection\n\n")
 	}
 	// Hang forever
@@ -88,11 +92,10 @@ func (n *SimpleNode) ConnectTo(addr string) {
 		log.Fatalln()
 		fmt.Println("ConnectTo Error:", err)
 	}
-
 	info, err := peer.AddrInfoFromP2pAddr(maddr)
 	if err != nil {
 		log.Fatalln(err)
-		fmt.Println("ConnectTo Error:", err)
+		fmt.Println("ConnectTo Error AddrInfoFromP2pAddr:", err)
 	}
 	n.Host.Peerstore().AddAddrs(info.ID, info.Addrs, peerstore.PermanentAddrTTL)
 
